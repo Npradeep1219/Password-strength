@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Strength Checker</title>
+    <style>
+        body { 
+            font-family: Arial, sans-serif;
+            background-color: #ffffff; /* Changed background color to white */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .container {
+            background-color: rgba(255, 255, 255, 0.2); /* Transparent background */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            max-width: 300px;
+            width: 100%;
+        }
+        h2 { 
+            color: #333; /* Updated text color for better contrast against white background */
+            margin-bottom: 20px;
+        }
+        .input-group {
+            position: relative;
+            width: 100%;
+        }
+        input { 
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 100%;
+            padding-right: 40px; /* Space for the toggle icon */
+        }
+        .toggle-password {
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 1.2em;
+            color: #007bff;
+        }
+        button { 
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px;
+            width: 100%;
+            background-color: #007bff;
+            color: white;
+            cursor: pointer;
+        }
+        .feedback { 
+            margin-top: 10px; 
+            font-weight: bold;
+            text-align: center;
+        }
+        .weak { color: red; }
+        .moderate { color: orange; }
+        .strong { color: green; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Password Strength Checker</h2>
+        <div class="input-group">
+            <input type="password" id="password" placeholder="Enter password">
+            <span class="toggle-password" onclick="togglePasswordVisibility()">👁️</span>
+        </div>
+        <div id="feedback" class="feedback"></div>
+        <button onclick="suggestPassword()">Suggest Strong Password</button>
+    </div>
+
+    <script>
+        document.getElementById('password').addEventListener('input', checkPasswordStrength);
+
+        function checkPasswordStrength() {
+            var password = document.getElementById('password').value;
+            var feedback = document.getElementById('feedback');
+            var strength = '';
+
+            if (password.length < 8) {
+                strength = 'Weak';
+                feedback.className = 'feedback weak';
+            } else if (password.match(/[a-z]/) && password.match(/[A-Z]/) && password.match(/[0-9]/) && password.match(/[^a-zA-Z0-9]/)) {
+                strength = 'Strong';
+                feedback.className = 'feedback strong';
+            } else {
+                strength = 'Moderate';
+                feedback.className = 'feedback moderate';
+            }
+
+            feedback.textContent = 'Password Strength: ' + strength;
+        }
+
+        function suggestPassword() {
+            var password = generateStrongPassword();
+            document.getElementById('password').value = password;
+            checkPasswordStrength();
+        }
+
+        function generateStrongPassword() {
+            var chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+~`|}{[]:;?><,./-=";
+            var password = '';
+            for (var i = 0; i < 12; i++) {
+                password += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return password;
+        }
+
+        function togglePasswordVisibility() {
+            var passwordField = document.getElementById('password');
+            var toggleIcon = document.querySelector('.toggle-password');
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                toggleIcon.textContent = '';
+            } else {
+                passwordField.type = 'password';
+                toggleIcon.textContent = '';
+            }
+        }
+    </script>
+</body>
+</html>
